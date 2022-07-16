@@ -17,4 +17,14 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'user_id');
+    }
+
+    public function category()
+    {
+        return $this->hasOne(Category::class, 'user_id');
+    }
 }

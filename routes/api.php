@@ -18,11 +18,18 @@ Route::group([
     'namespace' => 'App\Http\Controllers\api\v1',
     'prefix' => 'v1'
 ], function(){
+
+    // auth api
     Route::post('register', 'UserController@register');
     Route::post('login', 'UserController@login');
-    Route::get('test', function(){
-        return response()->json([
-            'message' => 'you are in'
-        ]);
-    })->middleware('auth:api');
+
+    // posts api
+    Route::group([
+        'prefix' => 'post',
+        'middleware' => ['auth:api']
+    ],
+    function(){
+        Route::get('all', 'PostController@index');
+        Route::post('create', 'PostController@store');
+    });
 });
