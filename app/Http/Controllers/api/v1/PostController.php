@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -17,7 +18,7 @@ class PostController extends Controller
 
         // return all posts in database
         return response()->json([
-            'status' => 'succes',
+            'status' => 'success',
             'message' => 'all posts',
             'data' => $data
         ], 200);
@@ -60,31 +61,99 @@ class PostController extends Controller
             ]);
         }
 
+        // prepare post data
+        $data['post'] = $data_request;
+
         // return succes respon
         return response()->json([
             'status' => 'success',
             'message' => 'success to create a post',
-            'data' => [
-                'post' => $data_request
-            ]
+            'data' => $data
         ], 200);
     }
 
 
-    public function show($id)
+    public function show(Post $post)
     {
-        //
+
+        // prepare post data
+        $data['post'] = $post;
+
+        // return data post
+        return response()->json([
+            'status' => 'success',
+            'message' => 'detail posts',
+            'data' => $data
+        ]);
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        // validate data input
+        $request->validate([
+            'image' => 'image|mimes:jpeg,png,jpg'
+        ]);
+
+        $folder = 'images';
+
+        // prepare all updated field
+        $data_request = $request->all();
+
+        // update image on disk
+        if( $request->hasFile('image') ){
+            
+            // store image on disk
+            $path = $request->image->store($folder);
+            $data_request['image'] = $path;
+            
+            // delete image on disk
+            Storage::delete($post->image);
+        }
+        
+        // update image on database
+        $post->update( $data_request );
+
+        // new updated post
+        $new_post = Post::find($post->getKey());
+        
+        // return success updated post
+        return response()->json([
+            'status' => 'success',
+            'message' => 'update post',
+            'data' => $new_post
+        ]);
     }
 
 
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
+
+        // delete post data
+        try{
+            $post->delete();
+        }catch(\Throwable $e){
+
+            // return failed delete response
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'failed to delete a post'
+            ]);
+        }
+
+        // delete image on disk if exists
+        if( $post->image != null ){
+            Storage::delete($post->image);
+        }
+        
+        // prepare deleted post
+        $data['post'] = $post;
+
+        // return success delete response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success to delete a post',
+            'data' => $data
+        ]);
     }
 }

@@ -31,5 +31,8 @@ Route::group([
     function(){
         Route::get('all', 'PostController@index');
         Route::post('create', 'PostController@store');
+        Route::get('detail/{post:id}', 'PostController@show');
+        Route::post('delete/{post:id}', 'PostController@destroy');
+        Route::post('update/{post:id}', 'PostController@update');
     });
 });
