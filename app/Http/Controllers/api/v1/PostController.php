@@ -73,7 +73,7 @@ class PostController extends Controller
             'status' => 'success',
             'message' => 'success to create a post',
             'data' => $data
-        ], 200);
+        ], 201);
     }
 
 
