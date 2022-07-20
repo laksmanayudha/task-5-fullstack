@@ -10,11 +10,15 @@ use Illuminate\Support\Facades\Storage;
 class PostController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
 
         // get all posts in database
-        $data['posts'] = Post::all();
+        if( $request->query('page') ){  
+            $data['posts'] = Post::paginate(5);
+        }else{
+            $data['posts'] = Post::all();
+        }
 
         // return all posts in database
         return response()->json([
@@ -115,7 +119,7 @@ class PostController extends Controller
         $post->update( $data_request );
 
         // new updated post
-        $new_post = Post::find($post->getKey());
+        $new_post['post'] = Post::find($post->getKey());
         
         // return success updated post
         return response()->json([
