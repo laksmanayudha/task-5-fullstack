@@ -2,13 +2,14 @@
 
 namespace Tests\Unit;
 
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PostTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
     protected $user;
 
     public function setUp() : void
@@ -16,6 +17,7 @@ class PostTest extends TestCase
         parent::setUp();
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
+        $this->seed();
     }
     /**
      * A basic unit test example.
@@ -31,7 +33,7 @@ class PostTest extends TestCase
         ];
         
         $this->withoutExceptionHandling();
-        $this->postJson('/api/v1/post/create', $formData)
+        $this->post('/api/v1/post/create', $formData)
             ->assertStatus(201)
             ->assertJson([
                 'status' => 'success',
@@ -40,5 +42,13 @@ class PostTest extends TestCase
                     'post' => $formData
                 ]
             ]);
+    }
+
+    public function test_show_post()
+    {
+        $post = Post::factory()->make();
+        $this->user->posts()->save($post);
+
+        $this->get("/api/v1/post/detail/$post->id")->assertStatus(200);
     }
 }

@@ -23,8 +23,8 @@ class User extends Authenticatable
         return $this->hasMany(Post::class, 'user_id');
     }
 
-    public function category()
+    public function categories()
     {
-        return $this->hasOne(Category::class, 'user_id');
+        return $this->hasMany(Category::class, 'user_id');
     }
 }

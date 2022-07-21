@@ -19,8 +19,8 @@ class PostFactory extends Factory
             'title' => $this->faker->title(),
             'content' => $this->faker->text(),
             'image' => $this->faker->imageUrl(200, 200),
-            'user_id' => $this->faker->numberBetween(1, User::count()),
-            'category_id' => $this->faker->numberBetween(1, Category::count())
+            'user_id' => $this->faker->randomElement(User::all()->modelKeys()),
+            'category_id' => $this->faker->randomElement(Category::all()->modelKeys())
         ];
     }
 }
