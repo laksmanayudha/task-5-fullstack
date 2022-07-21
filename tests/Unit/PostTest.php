@@ -44,7 +44,7 @@ class PostTest extends TestCase
             ]);
     }
 
-    public function test_show_post()
+    public function test_detail_post()
     {
         $post = Post::factory()->make();
         $this->user->posts()->save($post);
