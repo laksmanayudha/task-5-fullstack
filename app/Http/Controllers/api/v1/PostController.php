@@ -124,7 +124,7 @@ class PostController extends Controller
         // return success updated post
         return response()->json([
             'status' => 'success',
-            'message' => 'update post',
+            'message' => 'success to update post',
             'data' => $new_post
         ]);
     }
