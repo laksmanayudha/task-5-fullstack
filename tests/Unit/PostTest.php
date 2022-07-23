@@ -162,7 +162,7 @@ class PostTest extends TestCase
     {
 
         // prepare file upload
-        $file = UploadedFile::fake()->image('test.jpg');
+        $file = UploadedFile::fake()->image('test.jpg', 200, 200);
         $folder = 'images';
 
         // prepare input data
@@ -186,7 +186,7 @@ class PostTest extends TestCase
     {
 
         // prepare file upload
-        $file = UploadedFile::fake()->image('test-update.jpg');
+        $file = UploadedFile::fake()->image('test-update.jpg', 200, 200);
         $folder = 'images';
 
         // create a post
