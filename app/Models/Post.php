@@ -20,4 +20,9 @@ class Post extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+
+    public function excerpt()
+    {
+        return substr($this->content, 0, 100) . '...';
+    }
 }
