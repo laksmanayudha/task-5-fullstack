@@ -7,7 +7,7 @@
         </div>
         <div class="row">
             @foreach ($posts as $post)
-                <div class="col-md-4">
+                <div class="col-md-6 col-lg-4">
                     <div class="card mb-3">
                         <a href="">
                             @isset($post->image)
@@ -22,11 +22,37 @@
                                 <h5 class="card-title">{{ $post->title }}</h5>
                             </a>
                             <p class="card-text">{{ $post->excerpt() }}</p>
-                            <p class="card-text"><small class="text-muted">{{ $post->created_at->diffForHumans() }}</small></p>
+                            <p class="card-text">
+                                <small>{{ $post->category->name }}</small> ·
+                                <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
+                            </p>
+                            <div>
+                                <button class="btn btn-primary">Edit</button>
+                                <form action="/blog/delete/{{ $post->id }}" class="d-inline-block" method="POST">
+                                    @csrf
+                                    <button class="btn btn-danger deleteButton">Delete</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>    
             @endforeach
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        window.onload = () => {
+            const deleteButton = [...document.getElementsByClassName('deleteButton')]
+        
+            deleteButton.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    if( !confirm('Apakah anda ingin menghapus artikel ini ?')){
+                        e.preventDefault()
+                    }
+                })
+            })
+        }
+    </script>
 @endsection
