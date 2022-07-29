@@ -24,6 +24,8 @@ Route::group([
 
     Route::get('/blogs', [BlogController::class, 'index']);
     Route::get('/blog/form', [BlogController::class, 'form']);
+    Route::get('/blog/formUpdate/{post:id}', [BlogController::class, 'formUpdate']);
     Route::post('/blog/create', [BlogController::class, 'create']);
     Route::post('/blog/delete/{post:id}', [BlogController::class, 'delete']);
+    Route::post('/blog/update/{post:id}', [BlogController::class, 'update']);
 });

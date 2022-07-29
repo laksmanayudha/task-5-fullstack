@@ -2,9 +2,24 @@
 
 @section('content')
     <div class="container">
+        {{-- alert --}}
+        @if (session('alert'))
+            @php
+                $alert = session('alert')
+            @endphp
+            <div>
+                <div class="alert alert-{{ $alert['type'] }}" role="alert">
+                    {{ $alert['message'] }}
+                </div>
+            </div>
+        @endif            
+
+        {{-- button create blog --}}
         <div class="mb-3">
             <a href="/blog/form" class="text-decoration-none btn btn-primary">add new article</a>
         </div>
+
+        {{-- blogs list --}}
         <div class="row">
             @foreach ($posts as $post)
                 <div class="col-md-6 col-lg-4">
@@ -27,7 +42,7 @@
                                 <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
                             </p>
                             <div>
-                                <button class="btn btn-primary">Edit</button>
+                                <a href="/blog/formUpdate/{{ $post->id }}" class="btn btn-primary">Edit</a>
                                 <form action="/blog/delete/{{ $post->id }}" class="d-inline-block" method="POST">
                                     @csrf
                                     <button class="btn btn-danger deleteButton">Delete</button>
