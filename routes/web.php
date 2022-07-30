@@ -12,16 +12,20 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::group([
     'middleware' => 'auth'
 ], function(){
+    // home route
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    // category route
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::post('/category/create', [CategoryController::class, 'create']);
     Route::post('/category/delete/{category:id}', [CategoryController::class, 'delete']);
     Route::post('/category/update/{category:id}', [CategoryController::class, 'update']);
 
+    // blog route
     Route::get('/blogs', [BlogController::class, 'index']);
     Route::get('/blog/form', [BlogController::class, 'form']);
     Route::get('/blog/formUpdate/{post:id}', [BlogController::class, 'formUpdate']);

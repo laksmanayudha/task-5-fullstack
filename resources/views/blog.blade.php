@@ -2,6 +2,9 @@
 
 @section('content')
     <div class="container">
+
+        <h1>Blogs Page</h1>
+
         {{-- alert --}}
         @if (session('alert'))
             @php

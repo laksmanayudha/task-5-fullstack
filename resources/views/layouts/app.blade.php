@@ -32,8 +32,10 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
+                    <ul class="navbar-nav me-auto ms-3">
+                        <li><a class="me-3 text-decoration-none" href="/home">Home</a></li>
+                        <li><a class="me-3 text-decoration-none" href="/blogs">Blogs</a></li>
+                        <li><a class="me-3 text-decoration-none" href="/categories">Categories</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
