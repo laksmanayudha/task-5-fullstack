@@ -90,6 +90,15 @@ class BlogCrudFeatureTest extends TestCase
 
         $this->withoutExceptionHandling();
 
+        // check if data not displayed in view
+        $this->get('/blogs')
+        ->assertDontSeeText(
+            [
+                'test title', 
+                'test content', 
+            ]
+        );
+
         // insert blog data and check redirect route
         $this->post('/blog/create', $data)->assertRedirect('/blogs');
 
@@ -120,12 +129,40 @@ class BlogCrudFeatureTest extends TestCase
     {
 
         // create a post
-        $post = Post::factory()->make();
+        $post = new Post([
+            'title' => 'create_title',
+            'content' => 'create_content',
+            'category_id' => $this->faker->randomElement(Category::all()->modelKeys())
+        ]);
 
         // save a post by user
         $this->user->posts()->save($post);
 
+        // prepare updated blog data
+        $file = UploadedFile::fake()->image('test.jpg', 200, 200);
+        $upated_data = [
+            'title' => 'test title',
+            'content' => 'test content',
+            'image' => $file,
+            'category_id' => $this->faker->randomElement(Category::all()->modelKeys())
+        ];
+
         $this->withoutExceptionHandling();
+
+        // check if inserted blog displayed in view
+        $this->get('/blogs')
+        ->assertSeeText(
+            [
+                $post->title,
+                $post->content,
+            ]
+        )
+        ->assertDontSeeText(
+            [
+                'test title', 
+                'test content', 
+            ]
+        );
 
         // test update form view can be rendered with the old post data displayed
         // $this->withoutExceptionHandling();
@@ -139,26 +176,21 @@ class BlogCrudFeatureTest extends TestCase
                     'post' => $post
                 ]);
         
-
-        // prepare updated blog data
-        $file = UploadedFile::fake()->image('test.jpg', 200, 200);
-        $data = [
-            'title' => 'test title',
-            'content' => 'test content',
-            'image' => $file,
-            'category_id' => $this->faker->randomElement(Category::all()->modelKeys())
-        ];
-
         // update blog data
-        $this->post('/blog/update/' . $post->id, $data)->assertRedirect('/blogs');
+        $this->post('/blog/update/' . $post->id, $upated_data)->assertRedirect('/blogs');
         
         // check if data displayed in /blogs
         $this->get('/blogs')
-        ->assertSee(
+        ->assertDontSeeText(
+            [
+                $post->title,
+                $post->content,
+            ]
+        )
+        ->assertSeeText(
             [
                 'test title', 
                 'test content', 
-                Category::find($data['category_id'])->name
             ]
         );
     }
@@ -171,7 +203,15 @@ class BlogCrudFeatureTest extends TestCase
         // select blog data
         $post = Post::find($deleted_id);
 
+        // check if blog displayed in view
+        $this->get('/blogs')
+            ->assertSee('<h5 class="card-title">' . $post->title . '</h5>', false);
+
         // delete blog data
         $this->post('/blog/delete/' . $post->id)->assertRedirect('/blogs');
+
+        // check if blog not displayed in view
+        $this->get('/blogs')
+        ->assertDontSee('<h5 class="card-title">' . $post->title . '</h5>', false);
     }
 }
